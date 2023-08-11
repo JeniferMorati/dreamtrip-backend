@@ -40,6 +40,10 @@ export class TravelRepository extends BaseRepository<
 
       return destinations;
     } catch (error: any) {
+      if (error?.statusCode === 204) {
+        Report.Error("", StatusCode.NoContent, "travel-repository");
+      }
+
       Report.Error(
         "Find travel is not possible",
         StatusCode.InternalServerError,
