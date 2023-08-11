@@ -1,10 +1,9 @@
-import { provide } from "inversify-binding-decorators";
 import { IMongooseDTO } from "./mongoose.provider.dto";
 import mongoose from "mongoose";
-import { LogLevel, log } from "@expressots/core";
+import { LogLevel, log, provideSingleton } from "@expressots/core";
 import ENV from "env";
 
-@provide(Mongoose)
+@provideSingleton(Mongoose)
 class Mongoose implements IMongooseDTO {
   private connection!: mongoose.Connection;
   connectionOptions = {};
