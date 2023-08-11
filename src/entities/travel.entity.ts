@@ -1,5 +1,6 @@
 import { Document, Schema, model } from "mongoose";
 import { UserDocument } from "./user.entity";
+import { IEntity } from "./base.entity";
 
 interface IReview {
   user: UserDocument;
@@ -8,11 +9,11 @@ interface IReview {
   date: Date;
 }
 
-interface ITravelDestination {
+interface ITravelDestination extends IEntity {
   name: string;
   description: string;
   location: string;
-  imageUrl?: string;
+  image?: string;
   imageVersion?: string;
   rating: number;
   reviews: IReview[];
@@ -39,7 +40,7 @@ const travelDestinationSchema = new Schema<ITravelDestination>(
       type: String,
       required: [true, "Location is required"],
     },
-    imageUrl: {
+    image: {
       type: String,
       required: false,
       select: true,
