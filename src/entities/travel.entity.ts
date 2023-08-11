@@ -1,80 +1,51 @@
 import { Document, Schema, model } from "mongoose";
-import { UserDocument } from "./user.entity";
-import { IEntity } from "./base.entity";
-
-interface IReview {
-  user: UserDocument;
-  comment: string;
-  rating: number;
-  date: Date;
-}
-
-interface ITravelDestination extends IEntity {
-  name: string;
-  description: string;
-  location: string;
-  image?: string;
-  imageVersion?: string;
-  rating: number;
-  reviews: IReview[];
-  price: number;
-  availableDates: {
-    startDate: Date;
-    endDate: Date;
-  }[];
-}
+import { ITravelDestination } from "./interfaces/travel.entity.interface";
 
 type TravelDestinationDocument = Document & ITravelDestination;
 
-const travelDestinationSchema = new Schema<ITravelDestination>(
+const TravelDestinationSchema = new Schema<ITravelDestination>(
   {
-    name: {
-      type: String,
-      required: [true, "Destination name is required"],
-    },
-    description: {
-      type: String,
-      required: [true, "Description is required"],
-    },
+    name: { type: String, required: [true, "Name is required"] },
+    description: { type: String, required: [true, "Description is required"] },
     location: {
-      type: String,
-      required: [true, "Location is required"],
+      city: { type: String, required: [true, "City is required"] },
+      country: { type: String, required: [true, "Country is required"] },
+      state: String,
+      address: String,
+      zipCode: String,
+      coordinates: {
+        latitude: Number,
+        longitude: Number,
+      },
     },
-    image: {
-      type: String,
-      required: false,
-      select: true,
-    },
-    imageVersion: {
-      type: String,
-      required: false,
-      select: true,
-    },
+    image: String,
+    imageVersion: String,
+    category: [{ icon: String, label: String }],
     rating: {
       type: Number,
-      required: [true, "Rating is required"],
-      min: 0,
-      max: 5,
+      required: false,
+      min: [0, "Rating must be at least 0"],
+      max: [5, "Rating must not exceed 5"],
+      validate: {
+        validator: (value: number) => value >= 0 && value <= 5,
+        message: "Rating must be between 0 and 5",
+      },
     },
     reviews: [
       {
         user: { type: Schema.Types.ObjectId, ref: "User" },
-        comment: { type: String },
-        rating: { type: Number, min: 0, max: 5 },
-        date: { type: Date },
+        comment: String,
+        rating: Number,
+        date: Date,
       },
     ],
-    price: {
-      type: Number,
-      required: [true, "Price is required"],
-      min: 0,
-    },
-    availableDates: [
-      {
-        startDate: { type: Date, required: true },
-        endDate: { type: Date, required: true },
-      },
+    price: { type: Number, required: [true, "Price is required"] },
+    availableDates: [{ startDate: Date, endDate: Date }],
+    notes: [{ title: String, content: String, date: Date }],
+    accommodation: [
+      { icon: String, label: String, description: String, active: Boolean },
     ],
+    itinerary: [{ activity: String, date: Date, time: String, notes: String }],
   },
   {
     timestamps: true,
@@ -84,7 +55,7 @@ const travelDestinationSchema = new Schema<ITravelDestination>(
 
 const TravelDestination = model<ITravelDestination>(
   "TravelDestination",
-  travelDestinationSchema,
+  TravelDestinationSchema,
 );
 
 export { TravelDestination, ITravelDestination, TravelDestinationDocument };
