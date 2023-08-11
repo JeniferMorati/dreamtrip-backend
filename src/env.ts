@@ -26,6 +26,12 @@ const ENV = {
     FILE: process.env.FILE as string,
     FOLDER: process.env.FOLDER as string,
   },
+  Cloudinary: {
+    BASE_URL: process.env.CLOUDINARY_BASE_URL as string,
+    CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
+    API_KEY: process.env.CLOUDINARY_API_KEY as string,
+    API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
+  },
 };
 
 export default ENV;

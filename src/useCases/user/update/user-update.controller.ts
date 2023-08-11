@@ -5,6 +5,8 @@ import {
   requestBody,
   requestParam,
   response,
+  request,
+  requestHeaders,
 } from "inversify-express-utils";
 import { Response } from "express";
 import {
@@ -12,6 +14,14 @@ import {
   IUserUpdateResponseDTO,
 } from "./user-update.dto";
 import { UserUpdateUseCase } from "./user-update.usecase";
+import multer from "multer";
+import authMiddleware from "@providers/middlewares/AuthMiddleware/authmiddleware.provider";
+
+// Create a storage configuration for multer
+const storage = multer.memoryStorage(); // Store files in memory as buffers
+
+// Create the multer middleware with the storage configuration
+const upload = multer({ storage });
 
 @controller("/user/update")
 class UserUpdateController extends BaseController {
@@ -19,13 +29,18 @@ class UserUpdateController extends BaseController {
     super("user-update-controller");
   }
 
-  @httpPatch("/:id")
+  @httpPatch("/", upload.single("image"), authMiddleware)
   execute(
-    @requestParam("id") id: string,
     @requestBody() payload: IUserUpdateRequestDTO,
     @response() res: Response,
+    @requestHeaders("decoded") req,
   ): Promise<IUserUpdateResponseDTO> {
-    const data = { ...payload, id };
+    if (req.file) {
+      const uploadedImageBuffer = req.file.buffer;
+      payload.image = uploadedImageBuffer;
+    }
+
+    const data = { ...payload, id: req.id };
 
     return this.callUseCaseAsync(
       this.userUpdateUseCase.execute(data),

@@ -30,7 +30,7 @@ class UserDeleteUseCase {
     if (userDeleted) {
       const userDataReturn: IUserDeleteResponseDTO = {
         id: userDeleted._id,
-        name: userDeleted.name,
+        name: userDeleted.nickName,
         email: userDeleted.email,
         status: "User deleted successfully",
       };

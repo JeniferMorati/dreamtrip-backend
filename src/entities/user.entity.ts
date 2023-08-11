@@ -1,20 +1,40 @@
 import { Document, Schema, model } from "mongoose";
 import { IEntity } from "./base.entity";
 
-/* Represents the model of a user and its property types */
 interface IUser extends IEntity {
-  name: string;
+  nickName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
+  image?: string;
+  imageVersion?: string;
+  birthday: Date;
 }
 
 type UserDocument = Document & IUser;
 
 const userSchema = new Schema<IUser>(
   {
-    name: {
+    firstName: {
       type: String,
-      required: [true, "Name is required"],
+      required: [true, "First name is required"],
+    },
+    lastName: {
+      type: String,
+      required: [true, "Last name is required"],
+    },
+    nickName: {
+      type: String,
+      required: [true, "Nick name is required"],
+    },
+    birthday: {
+      type: Date,
+      required: [true, "Birthday is required"],
+      match: [
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
+        "Invalid date format",
+      ],
     },
     email: {
       type: String,
@@ -28,6 +48,16 @@ const userSchema = new Schema<IUser>(
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
       select: false,
+    },
+    image: {
+      type: String,
+      required: false,
+      select: true,
+    },
+    imageVersion: {
+      type: String,
+      required: false,
+      select: true,
     },
   },
   {

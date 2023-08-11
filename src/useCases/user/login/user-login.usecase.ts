@@ -43,13 +43,13 @@ class UserLoginUseCase {
 
     const token = await this.JWTProvider.generateToken({
       email: findUser.email,
-      name: findUser.name,
+      name: findUser.nickName,
       id: findUser.id,
     });
 
     const response: IUserLoginResponseDTO = {
       token,
-      name: findUser.name,
+      name: findUser.nickName,
       email: findUser.email,
       status: "success",
       id: findUser.id,

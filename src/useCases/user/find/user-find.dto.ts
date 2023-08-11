@@ -4,7 +4,7 @@ interface IUserFindRequestDTO {
 
 interface IUserFindResponseDTO {
   id: string;
-  name: string;
+  nickName: string;
   email: string;
 }
 

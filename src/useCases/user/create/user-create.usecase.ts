@@ -18,9 +18,8 @@ class CreateUserUseCase {
   ) {}
 
   async execute(data: ICreateUserDTO): Promise<ICreateUserReturnDTO | null> {
-    const { name, email, password } = data;
+    const { firstName, email, password } = data;
 
-    // Verifying if the user already exist
     const userExist: UserDocument | null = await this.userRepository.findOne({
       email,
     });
@@ -36,12 +35,11 @@ class CreateUserUseCase {
     }
 
     const userObj: UserDocument = new User({
-      name,
+      firstName,
       email,
       password,
     });
 
-    // Encrypting password
     if (this.bcryptHashGen) {
       const passwordHash: string | void =
         await this.bcryptHashGen.generatePasswordHash(password);
@@ -69,11 +67,9 @@ class CreateUserUseCase {
       this.mailTrapProvider.SendEmail(
         EmailType.CreateUser,
         userObj.email,
-        userObj.name,
+        `${userObj.firstName} ${userObj.lastName}`,
       );
     }
-
-    // const token = await this.jwtProvider.signJWT(userObj);
 
     return Promise.resolve({
       id: userObj.id,

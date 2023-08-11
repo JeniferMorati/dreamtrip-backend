@@ -1,7 +1,10 @@
 interface ICreateUserDTO {
-  name: string;
+  firstName: string;
+  lastName: string;
+  nickName: string;
   email: string;
   password: string;
+  birthday: Date;
 }
 
 interface ICreateUserReturnDTO {

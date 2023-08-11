@@ -5,10 +5,14 @@ import {
   IUserUpdateRequestDTO,
   IUserUpdateResponseDTO,
 } from "./user-update.dto";
+import { CloudinaryProvider } from "@providers/cloudnary/cloudinary.provider";
 
 @provide(UserUpdateUseCase)
 class UserUpdateUseCase {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private cloudinaryProvider: CloudinaryProvider,
+  ) {}
 
   async execute(
     payload: IUserUpdateRequestDTO,
@@ -25,7 +29,34 @@ class UserUpdateUseCase {
       return null;
     }
 
-    userExists.name = payload.name || userExists.name;
+    if (payload.image) {
+      const newProfileImage = await this.cloudinaryProvider.uploadImage(
+        payload.image,
+        payload.id,
+        "profile",
+      );
+
+      if (newProfileImage) {
+        userExists.imageVersion = newProfileImage.secure_url;
+        userExists.image = newProfileImage.url.replace(
+          `/v${newProfileImage.version}/`,
+          "/",
+        );
+      }
+    }
+
+    userExists.nickName = payload.nickName || userExists.nickName;
+
+    const updatedUser = await this.userRepository.update(userExists);
+
+    if (!updatedUser) {
+      Report.Error(
+        "Update user fail",
+        StatusCode.InternalServerError,
+        "user-update-usecase",
+      );
+      return null;
+    }
 
     return userExists;
   }
