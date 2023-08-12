@@ -86,6 +86,70 @@ class CloudinaryProvider {
       return null;
     }
   }
+
+  public async uploadMultipleImages(
+    imageBuffers: Buffer[],
+    publicIds: string[],
+    folder?: string,
+  ): Promise<UploadApiResponse[] | null> {
+    try {
+      const uploadPromises: Promise<UploadApiResponse | undefined>[] =
+        imageBuffers.map((imageBuffer, index) => {
+          const publicId = publicIds[index];
+          const uploadOptions: UploadApiOptions = {
+            resource_type: "image",
+            folder,
+            public_id: publicId,
+            transformation: [
+              {
+                width: 500,
+                height: 500,
+                crop: "limit",
+                quality: 80,
+                fetch_format: "auto",
+              },
+            ],
+          };
+
+          return new Promise((resolve, reject) => {
+            cloudinary.uploader
+              .upload_stream(uploadOptions, (error: any, result) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(result);
+                }
+              })
+              .end(imageBuffer);
+          });
+        });
+
+      const uploadResults = await Promise.all(uploadPromises);
+
+      const successResults = uploadResults.filter(
+        (result): result is UploadApiResponse => !!result?.secure_url,
+      );
+
+      if (successResults.length === imageBuffers.length) {
+        return successResults;
+      } else {
+        Report.Error(
+          "Some images failed to upload to Cloudinary",
+          StatusCode.InternalServerError,
+          "cloudinary-provider",
+        );
+        return null;
+      }
+    } catch (error) {
+      console.error("Error uploading images to Cloudinary:", error);
+      Report.Error(
+        "Error uploading images to Cloudinary",
+        StatusCode.InternalServerError,
+        "cloudinary-provider",
+      );
+      return null;
+    }
+  }
 }
 
 export { CloudinaryProvider };
