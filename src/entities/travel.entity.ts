@@ -21,6 +21,7 @@ const TravelDestinationSchema = new Schema<ITravelDestination>(
     image: String,
     imageVersion: String,
     category: [{ icon: String, label: String }],
+    included: [{ icon: String, label: String }],
     rating: {
       type: Number,
       required: false,
@@ -46,6 +47,7 @@ const TravelDestinationSchema = new Schema<ITravelDestination>(
       { icon: String, label: String, description: String, active: Boolean },
     ],
     itinerary: [{ activity: String, date: Date, time: String, notes: String }],
+    gallery: [String],
   },
   {
     timestamps: true,

@@ -7,38 +7,60 @@ import {
   requestHeaders,
   response,
 } from "inversify-express-utils";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { CreateTravelUseCase } from "./travel-create.usecase";
 import multer from "multer";
 import {
   ICreateTravelRequestDTO,
   ICreateTravelResponseDTO,
 } from "./travel-create.dto";
+import { TravelRoute } from "routes/travel.routes";
+import authMiddleware from "@providers/middlewares/AuthMiddleware/authmiddleware.provider";
 
-// Create a storage configuration for multer
-const storage = multer.memoryStorage(); // Store files in memory as buffers
+const storage = multer.memoryStorage();
 
-// Create the multer middleware with the storage configuration
 const upload = multer({ storage });
 
-@controller("/travel/create")
+@controller(TravelRoute.create, authMiddleware)
 class CreateTravelController extends BaseController {
   constructor(private createUseCase: CreateTravelUseCase) {
     super("create-controller");
   }
 
-  @httpPost("/", upload.single("image"))
+  @httpPost(
+    "/",
+    upload.fields([
+      {
+        name: "gallery",
+        maxCount: 5,
+      },
+      {
+        name: "image",
+        maxCount: 1,
+      },
+    ]),
+  )
   async execute(
     @requestBody() payload: ICreateTravelRequestDTO,
     @response() res: Response,
-    @request() req,
+    @request()
+    req: Request & { files: { [fieldname: string]: Express.Multer.File[] } }, // Usar MulterFile
   ): Promise<ICreateTravelResponseDTO> {
-    if (req.file) {
-      const uploadedImageBuffer = req.file.buffer;
-      payload.image = uploadedImageBuffer;
+    let gallery = payload.gallery
+      ? (payload.gallery as unknown as Buffer[])
+      : [];
+    let image = payload.image ? (payload.image as unknown as Buffer) : "";
+
+    if (req?.files) {
+      const storages = req.files;
+      if (storages?.image) image = storages.image[0].buffer;
+      if (storages?.gallery)
+        gallery = storages.gallery.map(
+          (file: Express.Multer.File) => file.buffer,
+        );
     }
 
-    const data = { ...payload };
+    const data = { ...payload, gallery, image } as ICreateTravelRequestDTO;
 
     return this.callUseCaseAsync(
       this.createUseCase.execute(data),

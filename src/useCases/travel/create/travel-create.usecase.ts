@@ -7,6 +7,7 @@ import { TravelRepository } from "@repositories/travel/travel.repository";
 import { Report, StatusCode } from "@expressots/core";
 import { TravelDestination } from "@entities/travel.entity";
 import { CloudinaryProvider } from "@providers/cloudnary/cloudinary.provider";
+import { randomUUID } from "crypto";
 
 @provide(CreateTravelUseCase)
 class CreateTravelUseCase {
@@ -18,21 +19,8 @@ class CreateTravelUseCase {
   async execute(
     data: ICreateTravelRequestDTO,
   ): Promise<ICreateTravelResponseDTO | null> {
-    const {
-      name,
-      description,
-      location,
-      image,
-      imageVersion,
-      rating,
-      reviews,
-      price,
-      availableDates,
-    } = data;
-
     const currentDate = new Date();
-
-    const isInvalidDate = availableDates.find(
+    const isInvalidDate = data?.availableDates?.find(
       (dates) => currentDate > dates.endDate || currentDate < dates.startDate,
     );
 
@@ -44,21 +32,11 @@ class CreateTravelUseCase {
       );
     }
 
-    const travelObj = new TravelDestination({
-      name,
-      description,
-      location,
-      image,
-      imageVersion,
-      rating,
-      reviews,
-      price,
-      availableDates,
-    });
+    const travelObj = new TravelDestination({ ...data });
 
-    if (image) {
+    if (data.image) {
       const travelImages = await this.cloudinaryProvider.uploadImage(
-        image,
+        data.image,
         travelObj.id,
         "destination",
       );
@@ -68,6 +46,16 @@ class CreateTravelUseCase {
         `/v${travelImages.version}/`,
         "/",
       );
+    }
+
+    if (data.gallery) {
+      const travelGallery = await this.cloudinaryProvider.uploadMultipleImages(
+        data.gallery,
+        data.gallery.map(() => randomUUID()),
+        "destination",
+      );
+
+      travelObj.gallery = travelGallery?.map((photo) => photo?.url) || [];
     }
 
     const travelCreated = await this.travelRepository.create(travelObj);

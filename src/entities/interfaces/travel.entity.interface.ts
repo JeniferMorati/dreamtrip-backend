@@ -55,11 +55,13 @@ export interface ITravelDestination extends IEntity {
   image?: string;
   imageVersion?: string;
   category?: ITravelGenericCategory[];
+  included?: ITravelGenericCategory[];
   rating?: number;
-  reviews: ITravelReview[];
+  reviews?: ITravelReview[];
   price: number;
-  availableDates: IAvailableDate[];
+  availableDates?: IAvailableDate[];
   notes: INote[];
   accommodation?: ITravelGenericFeature[];
   itinerary: IItinerary[];
+  gallery: string[];
 }
