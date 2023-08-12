@@ -11,14 +11,16 @@ import {
   IUserDeleteResponseDTO,
 } from "./user-delete.dto";
 import { UserDeleteUseCase } from "./user-delete.usecase";
+import authMiddleware from "@providers/middlewares/AuthMiddleware/authmiddleware.provider";
+import { UserRoute } from "routes/user.routes";
 
-@controller("/user/delete")
+@controller(UserRoute.delete, authMiddleware)
 class UserDeleteController extends BaseController {
   constructor(private userDeleteUseCase: UserDeleteUseCase) {
     super("user-delete-controller");
   }
 
-  @httpDelete("/:id")
+  @httpDelete("/")
   execute(
     @requestParam() payload: IUserDeleteRequestDTO,
     @response() res: Response,

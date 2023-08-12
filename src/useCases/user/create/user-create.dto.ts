@@ -1,11 +1,6 @@
-interface ICreateUserDTO {
-  firstName: string;
-  lastName: string;
-  nickName: string;
-  email: string;
-  password: string;
-  birthday: Date;
-}
+import { IUser } from "@entities/user.entity";
+
+type ICreateUserDTO = IUser;
 
 interface ICreateUserReturnDTO {
   id: string;

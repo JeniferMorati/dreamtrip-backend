@@ -8,6 +8,7 @@ import { provide } from "inversify-binding-decorators";
 import { ICreateUserDTO, ICreateUserReturnDTO } from "./user-create.dto";
 import { BcryptHashGenProvider } from "@providers/hashGenerator/bcrypt/bcrypt-hash-gen.provider";
 import { Report, StatusCode } from "@expressots/core";
+import { AuthRole } from "@providers/roles/roles.provider";
 
 @provide(CreateUserUseCase)
 class CreateUserUseCase {
@@ -35,9 +36,7 @@ class CreateUserUseCase {
     }
 
     const userObj: UserDocument = new User({
-      firstName,
-      email,
-      password,
+      ...data,
     });
 
     if (this.bcryptHashGen) {
@@ -50,6 +49,8 @@ class CreateUserUseCase {
 
       userObj.password = passwordHash;
     }
+
+    if (data.roles) userObj.roles = [AuthRole.User];
 
     const userCreated = await this.userRepository.create(userObj);
 

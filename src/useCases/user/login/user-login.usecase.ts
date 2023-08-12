@@ -44,6 +44,7 @@ class UserLoginUseCase {
     const token = await this.JWTProvider.generateToken({
       email: findUser.email,
       name: findUser.nickName,
+      roles: findUser.roles,
       id: findUser.id,
     });
 
