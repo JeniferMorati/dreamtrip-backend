@@ -41,6 +41,7 @@ export class UserRepository extends BaseRepository<IUser, UserDocument> {
           email: email,
         })
         .select("+password")
+        .select("+roles")
         .populate(embeddedRelations)
         .then((userDocument) => {
           return userDocument;
