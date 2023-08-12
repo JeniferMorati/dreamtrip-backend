@@ -1,5 +1,6 @@
 import { Document, Schema, model } from "mongoose";
 import { IEntity } from "./base.entity";
+import { AuthRole } from "@providers/roles/roles.provider";
 
 interface IUser extends IEntity {
   nickName: string;
@@ -10,6 +11,7 @@ interface IUser extends IEntity {
   image?: string;
   imageVersion?: string;
   birthday: Date;
+  roles: AuthRole[];
 }
 
 type UserDocument = Document & IUser;
@@ -58,6 +60,13 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: false,
       select: true,
+    },
+    roles: {
+      type: [String], // Change the type to String
+      enum: Object.values(AuthRole), // Use enum instead of validate
+      required: true,
+      default: [AuthRole.User],
+      select: false,
     },
   },
   {
