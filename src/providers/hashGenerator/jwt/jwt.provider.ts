@@ -8,7 +8,7 @@ class JWTProvider {
     return jwt.verify(token, ENV.Security.JWT_SECRET);
   }
 
-  public generateToken(payload) {
+  public async generateToken(payload) {
     return jwt.sign(payload, ENV.Security.JWT_SECRET, {
       expiresIn: ENV.Security.JWT_EXPIRES_IN,
     });
