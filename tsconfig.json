@@ -2,13 +2,13 @@
   "compilerOptions": {
     "target": "ES2017",
     "module": "commonjs",
-    "lib": ["es2017", "dom"],                             
+    "lib": ["es2017", "dom"],
     "declaration": false,
-    "removeComments": true,                               
-    "experimentalDecorators": true,                   
-    "emitDecoratorMetadata": true,                    
-    "resolveJsonModule": true,                        
-    "sourceMap": false,                                
+    "removeComments": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "sourceMap": false,
     "outDir": "./dist",
     "rootDir": "./",
     "baseUrl": "./src",
@@ -17,22 +17,15 @@
       "@providers/*": ["providers/*"],
       "@repositories/*": ["repositories/*"],
       "@useCases/*": ["useCases/*"]
-    },                                   
-    "esModuleInterop": true,                            
-    "forceConsistentCasingInFileNames": true,           
+    },
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "allowJs": true,                                     
-    "noImplicitAny": false,                          
+    "allowJs": true,
+    "noImplicitAny": false,
     "skipLibCheck": true,
-    "types": ["reflect-metadata","node", "jest"]                                
+    "types": ["reflect-metadata", "node", "jest"]
   },
-  "include": [
-    ".",
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "test"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts"], // Add "*.d.ts" here
+  "exclude": ["node_modules", "dist", "test"]
 }

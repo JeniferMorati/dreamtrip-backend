@@ -19,7 +19,7 @@ class CreateUserUseCase {
   ) {}
 
   async execute(data: ICreateUserDTO): Promise<ICreateUserReturnDTO | null> {
-    const { firstName, email, password } = data;
+    const { email, password } = data;
 
     const userExist: UserDocument | null = await this.userRepository.findOne({
       email,

@@ -4,4 +4,5 @@ export const UserRoute = {
   delete: "/user/delete/:id",
   login: "/user/login",
   update: "/user/update",
+  updatePhoto: "/user/update/photo",
 };

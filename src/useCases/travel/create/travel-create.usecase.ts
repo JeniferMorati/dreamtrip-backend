@@ -41,11 +41,11 @@ class CreateTravelUseCase {
         "destination",
       );
 
-      travelObj.image = travelImages?.url;
-      travelObj.imageVersion = travelImages?.url.replace(
-        `/v${travelImages.version}/`,
-        "/",
-      );
+      if (travelImages) {
+        travelObj.image = travelImages?.url;
+        travelObj.imageVersion =
+          this.cloudinaryProvider.removeVersionUrl(travelImages);
+      }
     }
 
     if (data.gallery) {

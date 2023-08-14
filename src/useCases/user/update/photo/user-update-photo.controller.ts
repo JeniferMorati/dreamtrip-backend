@@ -1,19 +1,21 @@
 import { BaseController, StatusCode } from "@expressots/core";
 import {
   controller,
+  httpGet,
   httpPatch,
   requestBody,
-  response,
   requestHeaders,
+  response,
 } from "inversify-express-utils";
 import { Response } from "express";
+import { UserUpdatePhotoUseCase } from "./user-update-photo.usecase";
 import {
-  IUserUpdateRequestDTO,
-  IUserUpdateResponseDTO,
-} from "./user-update.dto";
-import { UserUpdateUseCase } from "./user-update.usecase";
-import multer from "multer";
+  IUserUpdatePhotoRequestDTO,
+  IUserUpdatePhotoResponseDTO,
+} from "./user-update-photo.dto";
+import { UserRoute } from "routes/user.routes";
 import authMiddleware from "@providers/middlewares/AuthMiddleware/authmiddleware.provider";
+import multer from "multer";
 
 // Create a storage configuration for multer
 const storage = multer.memoryStorage(); // Store files in memory as buffers
@@ -21,31 +23,31 @@ const storage = multer.memoryStorage(); // Store files in memory as buffers
 // Create the multer middleware with the storage configuration
 const upload = multer({ storage });
 
-@controller("/user/update")
-class UserUpdateController extends BaseController {
-  constructor(private userUpdateUseCase: UserUpdateUseCase) {
-    super("user-update-controller");
+@controller(UserRoute.updatePhoto)
+class UserUpdatePhotoController extends BaseController {
+  constructor(private userUpdatePhotoUseCase: UserUpdatePhotoUseCase) {
+    super("user-update-photo-controller");
   }
 
   @httpPatch("/", upload.single("image"), authMiddleware)
   async execute(
-    @requestBody() payload: IUserUpdateRequestDTO,
+    @requestBody() payload: IUserUpdatePhotoRequestDTO,
     @response() res: Response,
     @requestHeaders("decoded") req,
-  ): Promise<IUserUpdateResponseDTO> {
+  ): Promise<IUserUpdatePhotoResponseDTO> {
     if (req.file) {
       const uploadedImageBuffer = req.file.buffer;
       payload.image = uploadedImageBuffer;
     }
 
-    const data = { ...payload, id: req.id };
+    const data = { ...payload };
 
     return this.callUseCaseAsync(
-      this.userUpdateUseCase.execute(data),
+      this.userUpdatePhotoUseCase.execute(data, req.id),
       res,
       StatusCode.OK,
     );
   }
 }
 
-export { UserUpdateController };
+export { UserUpdatePhotoController };

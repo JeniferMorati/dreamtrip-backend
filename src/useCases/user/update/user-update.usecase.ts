@@ -38,10 +38,8 @@ class UserUpdateUseCase {
 
       if (newProfileImage) {
         userExists.imageVersion = newProfileImage.secure_url;
-        userExists.image = newProfileImage.url.replace(
-          `/v${newProfileImage.version}/`,
-          "/",
-        );
+        userExists.image =
+          this.cloudinaryProvider.removeVersionUrl(newProfileImage);
       }
     }
 
@@ -58,7 +56,7 @@ class UserUpdateUseCase {
       return null;
     }
 
-    return userExists;
+    return Promise.resolve(userExists);
   }
 }
 

@@ -33,6 +33,7 @@ class CloudinaryProvider {
       return null;
     }
   }
+
   public async uploadImage(
     imageBuffer: Buffer,
     publicId: string,
@@ -149,6 +150,10 @@ class CloudinaryProvider {
       );
       return null;
     }
+  }
+
+  public removeVersionUrl(apiResponse: UploadApiResponse): string {
+    return apiResponse.url.replace(`/v${apiResponse.version}/`, "/");
   }
 }
 
