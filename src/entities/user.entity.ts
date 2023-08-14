@@ -1,18 +1,6 @@
 import { Document, Schema, model } from "mongoose";
-import { IEntity } from "./base.entity";
 import { AuthRole } from "@providers/roles/roles.provider";
-
-interface IUser extends IEntity {
-  nickName: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  image?: string;
-  imageVersion?: string;
-  birthday: Date;
-  roles: AuthRole[];
-}
+import { IUser } from "./interfaces/user.entity.interface";
 
 type UserDocument = Document & IUser;
 

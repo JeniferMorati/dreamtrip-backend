@@ -4,7 +4,6 @@ import {
   httpPost,
   request,
   requestBody,
-  requestHeaders,
   response,
 } from "inversify-express-utils";
 import { Request, Response } from "express";
@@ -18,7 +17,6 @@ import { TravelRoute } from "routes/travel.routes";
 import authMiddleware from "@providers/middlewares/AuthMiddleware/authmiddleware.provider";
 
 const storage = multer.memoryStorage();
-
 const upload = multer({ storage });
 
 @controller(TravelRoute.create, authMiddleware)
@@ -39,6 +37,7 @@ class CreateTravelController extends BaseController {
         maxCount: 1,
       },
     ]),
+    authMiddleware,
   )
   async execute(
     @requestBody() payload: ICreateTravelRequestDTO,

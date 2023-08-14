@@ -7,6 +7,7 @@ import {
 import { CloudinaryProvider } from "@providers/cloudnary/cloudinary.provider";
 import { TravelRepository } from "@repositories/travel/travel.repository";
 import { randomUUID } from "crypto";
+import { TravelDestination } from "@entities/travel.entity";
 
 @provide(TravelUpdateUseCase)
 class TravelUpdateUseCase {
@@ -18,19 +19,32 @@ class TravelUpdateUseCase {
   async execute(
     payload: ITravelUpdateRequestDTO,
   ): Promise<ITravelUpdateResponseDTO | null> {
-    const travel = await this.travelRepository.findById(payload.id);
+    const travelExist = await this.travelRepository.findById(payload.id);
 
-    if (!travel) {
+    if (!travelExist) {
       Report.Error(
-        "User not found",
-        StatusCode.BadRequest,
-        "user-update-usecase",
+        "Travel destination not found",
+        StatusCode.NotFound,
+        "travel-update-usecase",
       );
-
       return null;
     }
 
-    if (payload.gallery) {
+    const travel = new TravelDestination(travelExist);
+
+    if (payload.name) travel.name = payload.name;
+    if (payload.description) travel.description = payload.description;
+    if (payload.location) travel.location = payload.location;
+    if (payload.category) travel.category = payload.category;
+    if (payload.included) travel.included = payload.included;
+    if (payload.rating !== undefined) travel.rating = payload.rating;
+    if (payload.price) travel.price = payload.price;
+    if (payload.availableDates) travel.availableDates = payload.availableDates;
+    if (payload.notes) travel.notes = payload.notes;
+    if (payload.accommodation) travel.accommodation = payload.accommodation;
+    if (payload.itinerary) travel.itinerary = payload.itinerary;
+
+    if (payload.gallery && payload.gallery.length > 0) {
       const travelGallery = await this.cloudinaryProvider.uploadMultipleImages(
         payload.gallery,
         payload.gallery.map(() => randomUUID()),
@@ -54,18 +68,18 @@ class TravelUpdateUseCase {
       }
     }
 
-    const updateTravel = await this.travelRepository.update(travel);
+    const updatedTravel = await this.travelRepository.update(travel);
 
-    if (!updateTravel) {
+    if (!updatedTravel) {
       Report.Error(
-        "Update user fail",
+        "Failed to update travel destination",
         StatusCode.InternalServerError,
-        "user-update-usecase",
+        "travel-update-usecase",
       );
       return null;
     }
 
-    return Promise.resolve(travel);
+    return updatedTravel;
   }
 }
 

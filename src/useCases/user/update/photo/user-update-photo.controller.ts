@@ -1,8 +1,8 @@
 import { BaseController, StatusCode } from "@expressots/core";
 import {
   controller,
-  httpGet,
   httpPatch,
+  request,
   requestBody,
   requestHeaders,
   response,
@@ -33,7 +33,8 @@ class UserUpdatePhotoController extends BaseController {
   async execute(
     @requestBody() payload: IUserUpdatePhotoRequestDTO,
     @response() res: Response,
-    @requestHeaders("decoded") req,
+    @request() req,
+    @requestHeaders("decoded") decoded,
   ): Promise<IUserUpdatePhotoResponseDTO> {
     if (req.file) {
       const uploadedImageBuffer = req.file.buffer;
@@ -43,7 +44,7 @@ class UserUpdatePhotoController extends BaseController {
     const data = { ...payload };
 
     return this.callUseCaseAsync(
-      this.userUpdatePhotoUseCase.execute(data, req.id),
+      this.userUpdatePhotoUseCase.execute(data, decoded.id),
       res,
       StatusCode.OK,
     );

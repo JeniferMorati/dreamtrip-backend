@@ -5,6 +5,7 @@ import {
   requestBody,
   response,
   requestHeaders,
+  request,
 } from "inversify-express-utils";
 import { Response } from "express";
 import {
@@ -31,14 +32,15 @@ class UserUpdateController extends BaseController {
   async execute(
     @requestBody() payload: IUserUpdateRequestDTO,
     @response() res: Response,
-    @requestHeaders("decoded") req,
+    @request() req,
+    @requestHeaders("decoded") decoded,
   ): Promise<IUserUpdateResponseDTO> {
     if (req.file) {
       const uploadedImageBuffer = req.file.buffer;
       payload.image = uploadedImageBuffer;
     }
 
-    const data = { ...payload, id: req.id };
+    const data = { ...payload, id: decoded.id };
 
     return this.callUseCaseAsync(
       this.userUpdateUseCase.execute(data),
