@@ -50,8 +50,8 @@ const userSchema = new Schema<IUser>(
       select: true,
     },
     roles: {
-      type: [String], // Change the type to String
-      enum: Object.values(AuthRole), // Use enum instead of validate
+      type: [String],
+      enum: Object.values(AuthRole),
       required: true,
       default: [AuthRole.User],
       select: false,

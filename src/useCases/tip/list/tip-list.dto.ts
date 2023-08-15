@@ -1,5 +1,14 @@
 import { ITip } from "@entities/tip.entity";
+import { Types } from "mongoose";
 
-type ITipListResponseDTO = ITip[];
+type ITipListRequestDTO = {
+  user_id?: Types.ObjectId;
+};
 
-export { ITipListResponseDTO };
+type ITipListResponseAPI = ITip & {
+  hasUpvoted: boolean;
+};
+
+type ITipListResponseDTO = ITipListResponseAPI[];
+
+export { ITipListResponseDTO, ITipListRequestDTO };

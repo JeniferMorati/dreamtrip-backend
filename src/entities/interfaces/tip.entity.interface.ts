@@ -8,4 +8,5 @@ export interface ITip extends IEntity {
   title: string;
   updatedAt?: Date;
   upVotes?: number;
+  hasUpvoted?: boolean;
 }

@@ -11,7 +11,10 @@ const TipSchema = new Schema<ITip>(
     subTitle: { type: String, required: true },
     title: { type: String, required: true },
     updatedAt: { type: Date, required: true, default: Date.now },
-    upVotes: { type: Number, required: true, default: 0 },
+    upVotes: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
