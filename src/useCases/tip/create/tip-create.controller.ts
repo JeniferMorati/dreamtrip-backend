@@ -33,8 +33,6 @@ class TipCreateController extends BaseController {
       payload.coverPhoto = coverPhotoBuffer;
     }
 
-    console.log(req);
-
     return this.callUseCaseAsync(
       this.tipCreateUseCase.execute(payload),
       res,

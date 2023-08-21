@@ -19,11 +19,11 @@ export class TravelRepository extends BaseRepository<
   }
 
   async getRecommendedTravels(
-    interests: string[],
+    categories: string[],
   ): Promise<ITravelDestination[] | null> {
     try {
       const query = {
-        category: { $in: interests },
+        "category.label": { $in: categories },
       };
 
       const recommendedTravels = await this.model.find(query);

@@ -49,7 +49,6 @@ class FavoriteSendUseCase {
     }
 
     if (favoriteTravel?.status) {
-      console.log(favoriteTravel);
       const removeFavoriteTravel = await this.favoriteRepository.delete(
         favoriteTravel.travel,
       );

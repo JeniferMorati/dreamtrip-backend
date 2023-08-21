@@ -25,11 +25,9 @@ class TravelRecommendedController extends BaseController {
   async execute(
     @response() res: Response,
     @requestHeaders("decoded") decoded,
-    @requestBody() req: ITravelRecommendedRequestDTO,
   ): Promise<ITravelRecommendedResponseDTO> {
     return this.callUseCaseAsync(
       this.travelRecommendedUseCase.execute({
-        categories: req.categories,
         id: decoded.id,
       }),
       res,

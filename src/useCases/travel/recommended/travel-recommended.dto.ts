@@ -4,9 +4,7 @@ interface ITravelRecommendedRequestHeadersDTO {
   id: string;
 }
 
-type ITravelRecommendedRequestDTO = {
-  categories: string[];
-} & ITravelRecommendedRequestHeadersDTO;
+type ITravelRecommendedRequestDTO = ITravelRecommendedRequestHeadersDTO;
 
 type ITravelRecommendedResponseDTO = ITravelDestination[];
 
