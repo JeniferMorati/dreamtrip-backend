@@ -3,4 +3,5 @@ export const TravelRoute = {
   find: "/travel/find",
   update: "/travel/update",
   delete: "/travel/delete",
+  recommended: "/travel/recommended",
 };

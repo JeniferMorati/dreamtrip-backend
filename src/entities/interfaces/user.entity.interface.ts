@@ -11,4 +11,5 @@ export interface IUser extends IEntity {
   imageVersion?: string;
   birthday: Date;
   roles: AuthRole[];
+  interests?: string[];
 }

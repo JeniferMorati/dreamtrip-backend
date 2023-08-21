@@ -14,6 +14,7 @@ const travelRoutes: { [key: string]: AuthRole[] } = {
   [TravelRoute.delete]: [AuthRole.Editor],
   [TravelRoute.update]: [AuthRole.Editor],
   [TravelRoute.find]: [AuthRole.Guest],
+  [TravelRoute.recommended]: [AuthRole.User],
 };
 
 const userRoutes: { [key: string]: AuthRole[] } = {

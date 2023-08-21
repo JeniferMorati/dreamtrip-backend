@@ -45,6 +45,8 @@ class UserUpdateUseCase {
 
     userExists.nickName = payload.nickName || userExists.nickName;
 
+    userExists.interests = payload.interests || userExists.interests;
+
     const updatedUser = await this.userRepository.update(userExists);
 
     if (!updatedUser) {

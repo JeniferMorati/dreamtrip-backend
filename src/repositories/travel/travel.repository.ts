@@ -18,6 +18,43 @@ export class TravelRepository extends BaseRepository<
     this.model = TravelDestination;
   }
 
+  async getRecommendedTravels(
+    interests: string[],
+  ): Promise<ITravelDestination[] | null> {
+    try {
+      const query = {
+        category: { $in: interests },
+      };
+
+      const recommendedTravels = await this.model.find(query);
+
+      if (recommendedTravels.length === 0) {
+        Report.Error(
+          "No recommendations",
+          StatusCode.NoContent,
+          "travel-repository",
+        );
+      }
+
+      return recommendedTravels;
+    } catch (error: any) {
+      if (error?.statusCode === 204) {
+        Report.Error(
+          "No recommendations",
+          StatusCode.NoContent,
+          "travel-repository",
+        );
+      }
+
+      Report.Error(
+        "Failed to get recommended travels",
+        StatusCode.InternalServerError,
+        "travel-repository",
+      );
+      return null;
+    }
+  }
+
   async findByNameOrLocation(
     searchTerm: string,
     embeddedRelations: string[] | PopulateOptions | PopulateOptions[] = [],

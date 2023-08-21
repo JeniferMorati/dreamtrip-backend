@@ -2,7 +2,7 @@ import { IUser, User, UserDocument } from "@entities/user.entity";
 import { LogLevel, log } from "@expressots/core";
 import { BaseRepository } from "@repositories/base-repository";
 import { provide } from "inversify-binding-decorators";
-import { PopulateOptions } from "mongoose";
+import { PopulateOptions, Types } from "mongoose";
 
 @provide(UserRepository)
 export class UserRepository extends BaseRepository<IUser, UserDocument> {
@@ -50,6 +50,19 @@ export class UserRepository extends BaseRepository<IUser, UserDocument> {
     } catch (error: any) {
       log(LogLevel.Error, error, "baserepository-findbyid");
       return Promise.reject(null);
+    }
+  }
+
+  async getInterests(id: string): Promise<string[]> {
+    try {
+      const user = await User.findById(id).select("interests");
+      if (!user) {
+        return [];
+      }
+      return user.interests || [];
+    } catch (error: any) {
+      log(LogLevel.Error, error, "user-repository-getinterests");
+      return [];
     }
   }
 }

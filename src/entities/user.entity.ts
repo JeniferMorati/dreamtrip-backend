@@ -49,6 +49,9 @@ const userSchema = new Schema<IUser>(
       required: false,
       select: true,
     },
+    interests: {
+      type: [String],
+    },
     roles: {
       type: [String],
       enum: Object.values(AuthRole),

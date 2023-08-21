@@ -5,6 +5,7 @@ interface IUserUpdateRequestDTO {
   lastName?: string;
   email?: string;
   image?: Buffer;
+  interests?: string[];
 }
 
 interface IUserUpdateResponseDTO {
