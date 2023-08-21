@@ -11,40 +11,40 @@ async function authMiddleware(
 ): Promise<Response<any, Record<string, any>> | void> {
   const jwtProvider: JWTProvider = new JWTProvider();
   const roleProvider: RoleProvider = new RoleProvider();
+  const currentRoute = req.originalUrl;
+  const routerParamsKeys = Object.keys(req.params);
+  const queryParamsKeys = Object.keys(req.query);
+  let cleanedRoute = currentRoute;
+  routerParamsKeys.forEach((paramKey) => {
+    cleanedRoute = cleanedRoute.replace(
+      `/${req.params[paramKey]}`,
+      `/:${paramKey}`,
+    );
+  });
 
+  queryParamsKeys.forEach((queryKey) => {
+    cleanedRoute = cleanedRoute.replace(
+      `?${queryKey}=${req.query[queryKey]}`,
+      `?${queryKey}=:${queryKey}`,
+    );
+  });
   const token = req.headers["authorization"];
+  const allowedRoles = authenticatedRoutes[cleanedRoute] || [];
+  const isGuestRoute = allowedRoles[0] === AuthRole.Guest;
 
-  if (!token) {
-    return res.status(401).json({
-      auth: false,
-      message: "The token was not provisioned in the request",
-    });
+  if (!isGuestRoute) {
+    if (!token) {
+      return res.status(401).json({
+        auth: false,
+        message: "The token was not provisioned in the request",
+      });
+    }
   }
 
   try {
-    const decoded = jwtProvider.decodeToken(token);
-    const currentRoute = req.originalUrl;
+    const decoded = token ? jwtProvider.decodeToken(token) : "";
     const tokenInfo: any = decoded;
     const userRoles: AuthRole[] = tokenInfo?.roles || [];
-    const routerParamsKeys = Object.keys(req.params);
-    const queryParamsKeys = Object.keys(req.query);
-    let cleanedRoute = currentRoute;
-
-    routerParamsKeys.forEach((paramKey) => {
-      cleanedRoute = cleanedRoute.replace(
-        `/${req.params[paramKey]}`,
-        `/:${paramKey}`,
-      );
-    });
-
-    queryParamsKeys.forEach((queryKey) => {
-      cleanedRoute = cleanedRoute.replace(
-        `?${queryKey}=${req.query[queryKey]}`,
-        `?${queryKey}=:${queryKey}`,
-      );
-    });
-
-    const allowedRoles = authenticatedRoutes[cleanedRoute] || [];
 
     const hasRoleOrAbove = (requiredRole: AuthRole): boolean =>
       roleProvider
@@ -54,7 +54,7 @@ async function authMiddleware(
     if (allowedRoles.length > 0) {
       const hasRequiredRoles = allowedRoles.some(hasRoleOrAbove);
 
-      if (!hasRequiredRoles) {
+      if (!hasRequiredRoles && !isGuestRoute) {
         return res.status(StatusCode.Forbidden).send({
           statusCode: StatusCode.Forbidden,
           error: "Insufficient role permissions",

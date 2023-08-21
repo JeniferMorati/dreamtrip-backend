@@ -11,18 +11,35 @@ export class UpvoteRepository extends BaseRepository<IUpvote, UpvoteDocument> {
     this.model = Upvote;
   }
 
+  createUpvoteInstance(user_id: string, tip_id: string): IUpvote {
+    const userObjectId = new Types.ObjectId(user_id);
+    const tipObjectId = new Types.ObjectId(tip_id);
+
+    const upvote = new Upvote({
+      tip: tipObjectId,
+      user: userObjectId,
+    });
+
+    return upvote;
+  }
+
   async userUpvoteCheck({
     userId,
     tipId,
   }: {
-    userId: Types.ObjectId;
-    tipId: Types.ObjectId;
+    userId: string;
+    tipId: string;
   }): Promise<{
     id: string;
     status: boolean;
   }> {
     try {
-      const upvote = await Upvote.findOne({ user: userId, tip: tipId });
+      const userObjectId = new Types.ObjectId(userId);
+      const tipObjectId = new Types.ObjectId(tipId);
+      const upvote = await Upvote.findOne({
+        user: userObjectId,
+        tip: tipObjectId,
+      });
 
       if (!upvote) {
         Report.Error(

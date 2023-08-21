@@ -1,8 +1,7 @@
 import { ITip } from "@entities/tip.entity";
-import { Types } from "mongoose";
 
 type ITipListRequestDTO = {
-  user_id?: Types.ObjectId;
+  id: string;
 };
 
 type ITipListResponseAPI = ITip & {

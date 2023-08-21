@@ -10,6 +10,7 @@ import { Response } from "express";
 import { TipListUseCase } from "./tip-list.usecase";
 import { ITipListRequestDTO, ITipListResponseDTO } from "./tip-list.dto";
 import { TipRoute } from "routes/tip.routes";
+import authMiddleware from "@providers/middlewares/AuthMiddleware/authmiddleware.provider";
 
 @controller(TipRoute.list)
 class TipListController extends BaseController {
@@ -17,13 +18,13 @@ class TipListController extends BaseController {
     super("tip-list-controller");
   }
 
-  @httpGet("/")
+  @httpGet("/", authMiddleware)
   async execute(
     @response() res: Response,
-    @requestBody() payload: ITipListRequestDTO,
+    @requestHeaders("decoded") decoded: ITipListRequestDTO,
   ): Promise<ITipListResponseDTO> {
     return this.callUseCaseAsync(
-      this.tipListUseCase.execute(payload),
+      this.tipListUseCase.execute({ id: decoded.id }),
       res,
       StatusCode.OK,
     );

@@ -1,6 +1,12 @@
 import { IUpvote } from "@entities/upvote.entity";
 
-type IUpvoteSendRequestDTO = IUpvote;
+interface IUpvoteSendRequestHeadersDTO {
+  id: string;
+}
+
+type IUpvoteSendRequestDTO = {
+  tip_id: string;
+} & IUpvoteSendRequestHeadersDTO;
 
 type IUpvoteSendResponseDTO = IUpvote & {
   status: string;

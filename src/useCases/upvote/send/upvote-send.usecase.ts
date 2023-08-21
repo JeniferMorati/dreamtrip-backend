@@ -14,9 +14,11 @@ class UpvoteSendUseCase {
   async execute(
     data: IUpvoteSendRequestDTO,
   ): Promise<IUpvoteSendResponseDTO | null> {
+    const { id: user_id, tip_id } = data;
+
     const upVoteCheck = await this.upvoteRepository.userUpvoteCheck({
-      tipId: data.tip,
-      userId: data.user,
+      tipId: tip_id,
+      userId: user_id,
     });
 
     if (!upVoteCheck) {
@@ -26,10 +28,14 @@ class UpvoteSendUseCase {
         "upvote-send-usecase",
       );
     }
-
     const upVote = new Upvote();
-    upVote.user = data.user;
-    upVote.tip = data.tip;
+
+    const upVoteInstance = this.upvoteRepository.createUpvoteInstance(
+      user_id,
+      tip_id,
+    );
+    upVote.user = upVoteInstance.user;
+    upVote.tip = upVoteInstance.tip;
 
     if (upVoteCheck && upVoteCheck.status === false) {
       const pushUpvote = await this.upvoteRepository.create(upVote);

@@ -1,10 +1,12 @@
 import { ITip } from "@entities/tip.entity";
-import { Types } from "mongoose";
 
-interface ITipFindRequestDTO {
-  id: string;
-  user_id?: Types.ObjectId;
+interface ITipFindRequestHeadersDTO {
+  user_id?: string;
 }
+
+type ITipFindRequestDTO = {
+  id: string;
+} & ITipFindRequestHeadersDTO;
 
 type ITipFindResponseDTO = ITip & {
   hasUpvoted: boolean;

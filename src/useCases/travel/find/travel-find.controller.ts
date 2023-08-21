@@ -3,6 +3,7 @@ import {
   controller,
   httpGet,
   requestBody,
+  requestHeaders,
   response,
 } from "inversify-express-utils";
 import { Response } from "express";
@@ -11,20 +12,30 @@ import {
   ITravelFindRequestDTO,
   ITravelFindResponseDTO,
 } from "./travel-find.dto";
+import { TravelRoute } from "routes/travel.routes";
+import { JWTProvider } from "@providers/hashGenerator/jwt/jwt.provider";
+import authMiddleware from "@providers/middlewares/AuthMiddleware/authmiddleware.provider";
 
-@controller("/travel/find")
+@controller(TravelRoute.find)
 class TravelFindController extends BaseController {
-  constructor(private travelFindUseCase: TravelFindUseCase) {
+  constructor(
+    private travelFindUseCase: TravelFindUseCase,
+    private jwtProvider: JWTProvider,
+  ) {
     super("travel-find-controller");
   }
 
-  @httpGet("/")
+  @httpGet("/", authMiddleware)
   async execute(
     @response() res: Response,
     @requestBody() req: ITravelFindRequestDTO,
+    @requestHeaders("decoded") decoded,
   ): Promise<ITravelFindResponseDTO> {
     return this.callUseCaseAsync(
-      this.travelFindUseCase.execute(req),
+      this.travelFindUseCase.execute({
+        search: req.search,
+        user_id: decoded.id,
+      }),
       res,
       StatusCode.OK,
     );

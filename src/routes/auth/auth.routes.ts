@@ -1,13 +1,19 @@
 import { AuthRole } from "@providers/roles/roles.provider";
+import { FavoriteRoute } from "routes/favorites.routes";
 import { TipRoute } from "routes/tip.routes";
 import { TravelRoute } from "routes/travel.routes";
 import { UpvoteRoute } from "routes/upvote.routes";
 import { UserRoute } from "routes/user.routes";
 
+const favoriteRoutes: { [key: string]: AuthRole[] } = {
+  [FavoriteRoute.send]: [AuthRole.User],
+};
+
 const travelRoutes: { [key: string]: AuthRole[] } = {
   [TravelRoute.create]: [AuthRole.Editor],
   [TravelRoute.delete]: [AuthRole.Editor],
   [TravelRoute.update]: [AuthRole.Editor],
+  [TravelRoute.find]: [AuthRole.Guest],
 };
 
 const userRoutes: { [key: string]: AuthRole[] } = {
@@ -17,6 +23,8 @@ const userRoutes: { [key: string]: AuthRole[] } = {
 };
 
 const tipRoutes: { [key: string]: AuthRole[] } = {
+  [TipRoute.find]: [AuthRole.Guest],
+  [TipRoute.list]: [AuthRole.Guest],
   [TipRoute.delete]: [AuthRole.Editor],
   [TipRoute.create]: [AuthRole.Editor],
   [TipRoute.update]: [AuthRole.Editor],
@@ -24,7 +32,6 @@ const tipRoutes: { [key: string]: AuthRole[] } = {
 
 const upvoteRoutes: { [key: string]: AuthRole[] } = {
   [UpvoteRoute.send]: [AuthRole.User],
-  [UpvoteRoute.remove]: [AuthRole.User],
 };
 
 export const authenticatedRoutes: { [key: string]: AuthRole[] } = {
@@ -32,4 +39,5 @@ export const authenticatedRoutes: { [key: string]: AuthRole[] } = {
   ...travelRoutes,
   ...tipRoutes,
   ...upvoteRoutes,
+  ...favoriteRoutes,
 };

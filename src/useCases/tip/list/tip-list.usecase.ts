@@ -24,10 +24,10 @@ class TipListUseCase {
 
     const tipList = await Promise.all(
       tipListExist.map(async (tip) => {
-        if (data.user_id) {
+        if (data.id) {
           const checkUpvoted = await this.upvoteRepository.userUpvoteCheck({
-            tipId: new Types.ObjectId(tip.id),
-            userId: data.user_id,
+            tipId: tip.id,
+            userId: data.id,
           });
 
           hasUpvoted = !!checkUpvoted.status;

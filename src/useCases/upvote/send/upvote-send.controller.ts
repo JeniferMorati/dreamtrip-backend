@@ -30,7 +30,7 @@ class UpvoteSendController extends BaseController {
     return this.callUseCaseAsync(
       this.upvoteSendUseCase.execute({
         ...payload,
-        user: decoded.id,
+        id: decoded.id,
       }),
       res,
       StatusCode.OK,
