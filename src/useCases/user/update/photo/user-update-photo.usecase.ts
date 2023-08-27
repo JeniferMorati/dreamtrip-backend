@@ -32,8 +32,8 @@ class UserUpdatePhotoUseCase {
 
     const uploadImage = await this.cloudinaryProvider.uploadImage(
       data.image,
-      id,
-      "profile",
+      "profile_photo",
+      `profile/${user.id}`,
     );
 
     if (uploadImage) {

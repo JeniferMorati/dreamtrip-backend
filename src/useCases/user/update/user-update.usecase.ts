@@ -32,8 +32,8 @@ class UserUpdateUseCase {
     if (payload.image) {
       const newProfileImage = await this.cloudinaryProvider.uploadImage(
         payload.image,
-        payload.id,
-        "profile",
+        "profile_photo",
+        `profile/${userExists.id}`,
       );
 
       if (newProfileImage) {

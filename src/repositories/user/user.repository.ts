@@ -2,7 +2,7 @@ import { IUser, User, UserDocument } from "@entities/user.entity";
 import { LogLevel, log } from "@expressots/core";
 import { BaseRepository } from "@repositories/base-repository";
 import { provide } from "inversify-binding-decorators";
-import { PopulateOptions, Types } from "mongoose";
+import { PopulateOptions } from "mongoose";
 
 @provide(UserRepository)
 export class UserRepository extends BaseRepository<IUser, UserDocument> {

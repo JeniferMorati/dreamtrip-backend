@@ -18,19 +18,6 @@ class TipCreateUseCase {
   ): Promise<ITipCreateResponseDTO | null> {
     const tip = new Tip(data);
 
-    if (data.coverPhoto) {
-      const uploadCoverPhoto = await this.cloudinaryProvider.uploadImage(
-        data.coverPhoto,
-        randomUUID(),
-        "tip",
-      );
-
-      if (uploadCoverPhoto) {
-        tip.coverPhoto =
-          this.cloudinaryProvider.removeVersionUrl(uploadCoverPhoto);
-      }
-    }
-
     const createdTip = await this.tipRepository.create(tip);
 
     if (!createdTip) {
@@ -42,7 +29,22 @@ class TipCreateUseCase {
       return null;
     }
 
-    return Promise.resolve(createdTip);
+    if (data.coverPhoto) {
+      const uploadCoverPhoto = await this.cloudinaryProvider.uploadImage(
+        data.coverPhoto,
+        createdTip.id,
+        `tip/${createdTip.id}`,
+      );
+
+      if (uploadCoverPhoto) {
+        tip.coverPhoto =
+          this.cloudinaryProvider.removeVersionUrl(uploadCoverPhoto);
+      }
+
+      await tip.save();
+    }
+
+    return Promise.resolve(tip);
   }
 }
 

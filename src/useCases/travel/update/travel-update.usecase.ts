@@ -48,7 +48,7 @@ class TravelUpdateUseCase {
       const travelGallery = await this.cloudinaryProvider.uploadMultipleImages(
         payload.gallery,
         payload.gallery.map(() => randomUUID()),
-        "destination",
+        `destination/${travelExist.id}/gallery`,
       );
 
       travel.gallery = travelGallery?.map((photo) => photo?.url) || [];
@@ -57,8 +57,8 @@ class TravelUpdateUseCase {
     if (payload.image) {
       const uploadTravelImage = await this.cloudinaryProvider.uploadImage(
         payload.image,
-        payload.id,
-        "profile",
+        "cover_photo",
+        `destination/${travelExist.id}`,
       );
 
       if (uploadTravelImage) {

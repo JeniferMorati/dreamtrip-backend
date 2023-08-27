@@ -34,30 +34,6 @@ class CreateTravelUseCase {
 
     const travelObj = new TravelDestination({ ...data });
 
-    if (data.image) {
-      const travelImages = await this.cloudinaryProvider.uploadImage(
-        data.image,
-        travelObj.id,
-        "destination",
-      );
-
-      if (travelImages) {
-        travelObj.image = travelImages?.url;
-        travelObj.imageVersion =
-          this.cloudinaryProvider.removeVersionUrl(travelImages);
-      }
-    }
-
-    if (data.gallery) {
-      const travelGallery = await this.cloudinaryProvider.uploadMultipleImages(
-        data.gallery,
-        data.gallery.map(() => randomUUID()),
-        "destination",
-      );
-
-      travelObj.gallery = travelGallery?.map((photo) => photo?.url) || [];
-    }
-
     const travelCreated = await this.travelRepository.create(travelObj);
 
     if (!travelCreated) {
@@ -68,6 +44,35 @@ class CreateTravelUseCase {
       );
 
       return null;
+    }
+
+    if (data.image || data.gallery) {
+      if (data.image) {
+        const travelImages = await this.cloudinaryProvider.uploadImage(
+          data.image,
+          "cover_photo",
+          `destination/${travelCreated.id}`,
+        );
+
+        if (travelImages) {
+          travelCreated.image = travelImages?.url;
+          travelCreated.imageVersion =
+            this.cloudinaryProvider.removeVersionUrl(travelImages);
+        }
+      }
+
+      if (data.gallery) {
+        const travelGallery =
+          await this.cloudinaryProvider.uploadMultipleImages(
+            data.gallery,
+            data.gallery.map(() => randomUUID()),
+            `destination/${travelCreated.id}/gallery`,
+          );
+
+        travelCreated.gallery = travelGallery?.map((photo) => photo?.url) || [];
+      }
+
+      await travelCreated.save();
     }
 
     return Promise.resolve(travelCreated);

@@ -36,7 +36,7 @@ class TipUpdateUseCase {
       const uploadCoverPhoto = await this.cloudinaryProvider.uploadImage(
         data.coverPhoto,
         tip.id,
-        "tip",
+        `tip/${tip.id}`,
       );
 
       if (uploadCoverPhoto) {
