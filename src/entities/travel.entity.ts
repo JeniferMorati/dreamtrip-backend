@@ -25,21 +25,14 @@ const TravelDestinationSchema = new Schema<ITravelDestination>(
     rating: {
       type: Number,
       required: false,
-      min: [0, "Rating must be at least 0"],
+      min: [1, "Rating must be at least 0"],
       max: [5, "Rating must not exceed 5"],
       validate: {
-        validator: (value: number) => value >= 0 && value <= 5,
-        message: "Rating must be between 0 and 5",
+        validator: (value: number) => value >= 1 && value <= 5,
+        message: "Rating must be between 1 and 5",
       },
+      default: 0,
     },
-    reviews: [
-      {
-        user: { type: Schema.Types.ObjectId, ref: "User" },
-        comment: String,
-        rating: Number,
-        date: Date,
-      },
-    ],
     price: { type: Number, required: [true, "Price is required"] },
     availableDates: [{ startDate: Date, endDate: Date }],
     notes: [{ title: String, content: String, date: Date }],

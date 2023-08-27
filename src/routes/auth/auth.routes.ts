@@ -1,5 +1,6 @@
 import { AuthRole } from "@providers/roles/roles.provider";
 import { FavoriteRoute } from "routes/favorites.routes";
+import { ReviewRoute } from "routes/review.routes";
 import { TipRoute } from "routes/tip.routes";
 import { TravelRoute } from "routes/travel.routes";
 import { UpvoteRoute } from "routes/upvote.routes";
@@ -35,10 +36,18 @@ const upvoteRoutes: { [key: string]: AuthRole[] } = {
   [UpvoteRoute.send]: [AuthRole.User],
 };
 
+const reviewRoutes: { [key: string]: AuthRole[] } = {
+  [ReviewRoute.list]: [AuthRole.Guest],
+  [ReviewRoute.delete]: [AuthRole.User],
+  [ReviewRoute.create]: [AuthRole.User],
+  [ReviewRoute.update]: [AuthRole.User],
+};
+
 export const authenticatedRoutes: { [key: string]: AuthRole[] } = {
   ...userRoutes,
   ...travelRoutes,
   ...tipRoutes,
   ...upvoteRoutes,
   ...favoriteRoutes,
+  ...reviewRoutes,
 };

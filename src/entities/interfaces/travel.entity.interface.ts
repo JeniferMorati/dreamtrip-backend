@@ -1,5 +1,4 @@
 import { IEntity } from "@entities/base.entity";
-import { UserDocument } from "@entities/user.entity";
 
 export interface ITravelGenericCategory {
   icon: string;
@@ -9,13 +8,6 @@ export interface ITravelGenericCategory {
 export interface ITravelGenericFeature extends ITravelGenericCategory {
   description?: string;
   active: boolean;
-}
-
-export interface ITravelReview {
-  user: UserDocument;
-  comment: string;
-  rating: number;
-  date: Date;
 }
 
 export interface ILocation {
@@ -57,7 +49,6 @@ export interface ITravelDestination extends IEntity {
   category?: ITravelGenericCategory[];
   included?: ITravelGenericCategory[];
   rating?: number;
-  reviews?: ITravelReview[];
   price: number;
   availableDates?: IAvailableDate[];
   notes: INote[];
