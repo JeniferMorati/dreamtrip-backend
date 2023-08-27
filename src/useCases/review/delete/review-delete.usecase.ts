@@ -42,8 +42,6 @@ class ReviewDeleteUseCase {
 
     const isAuthorizated = review.user.toString() === data.userId;
 
-    console.log(review, data.userId);
-
     if (!isAuthorizated) {
       Report.Error(
         "Unauthorized action",

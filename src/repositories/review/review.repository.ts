@@ -214,8 +214,6 @@ export class ReviewRepository
 
       const updatedReview = await review.save();
 
-      console.log(review.rating, updatedRating);
-
       const totalRating = await this.model.find({ travel: review.travel });
       const newRating = this.calculateAverageRating(totalRating);
       const travel = await TravelDestination.findByIdAndUpdate(
@@ -223,8 +221,6 @@ export class ReviewRepository
         { rating: newRating },
         { new: true },
       );
-
-      console.log(travel?.id);
 
       if (!travel) {
         Report.Error(
@@ -304,7 +300,6 @@ export class ReviewRepository
         ) as IReviewApresentation[],
       );
     } catch (error) {
-      console.log(error);
       Report.Error(
         "Reviews internal server error",
         StatusCode.InternalServerError,
