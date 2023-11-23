@@ -1,14 +1,18 @@
-import { ITravelDestination } from "@entities/travel.entity";
+import { ITravelApresentation } from "@repositories/travel/travel.repository.interface";
 
 interface ITravelFindRequestDTO {
   search: string;
+  startDate: Date;
+  endDate: Date;
   user_id?: string;
 }
 
-type ITravelFindResponseApiDTO = ITravelDestination & {
-  hasFavorited: boolean;
-};
+type ITravelFindResponseApiDTO = ITravelApresentation;
 
 type ITravelFindResponseDTO = ITravelFindResponseApiDTO[];
 
-export { ITravelFindRequestDTO, ITravelFindResponseDTO };
+export {
+  ITravelFindRequestDTO,
+  ITravelFindResponseDTO,
+  ITravelFindResponseApiDTO,
+};

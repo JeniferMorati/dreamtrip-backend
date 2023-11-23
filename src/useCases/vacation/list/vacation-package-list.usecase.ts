@@ -1,37 +1,34 @@
-import { TravelRepository } from "@repositories/travel/travel.repository";
 import { provide } from "inversify-binding-decorators";
 import {
-  ITravelFindRequestDTO,
-  ITravelFindResponseDTO,
-} from "./travel-find.dto";
+  IVacationPackageRequestDTO,
+  IVacationPackageResponseDTO,
+} from "./vacation-package-list.dto";
+import { VacationPackageRepository } from "@repositories/vacation-package/vacation-package.repository";
 import { Report, StatusCode } from "@expressots/core";
+import { ReserveRepository } from "@repositories/reserve/reserve-repository";
 import { FavoriteRepository } from "@repositories/favorite/favorite.repository";
 import { TravelDestination } from "@entities/travel.entity";
-import { ReserveRepository } from "@repositories/reserve/reserve-repository";
 
-@provide(TravelFindUseCase)
-class TravelFindUseCase {
+@provide(VacationPackageUseCase)
+class VacationPackageUseCase {
   constructor(
-    private travelRepository: TravelRepository,
-    private favoriteRepository: FavoriteRepository,
+    private vacationPackageRepository: VacationPackageRepository,
     private reserveRepository: ReserveRepository,
+    private favoriteRepository: FavoriteRepository,
   ) {}
 
   async execute(
-    data: ITravelFindRequestDTO,
-  ): Promise<ITravelFindResponseDTO | null> {
-    const { search, endDate, startDate, user_id } = data;
-    const travelList = await this.travelRepository.findByNameOrLocation(
-      search,
-      startDate,
-      endDate,
+    data: IVacationPackageRequestDTO,
+  ): Promise<IVacationPackageResponseDTO | null> {
+    const travelList = await this.vacationPackageRepository.getVacationPackages(
+      data.package_id,
     );
 
     if (!travelList) {
       Report.Error(
-        "Error on find travel",
+        "Vacation pacakge error",
         StatusCode.InternalServerError,
-        "travel-find-usecase",
+        "vacation-package-list",
       );
 
       return null;
@@ -43,9 +40,12 @@ class TravelFindUseCase {
         const reservedDates =
           await this.reserveRepository.getReservedDatesForTravel(travel.id);
 
-        if (user_id) {
+        if (data?.user_id) {
           const checkFavorited =
-            await this.favoriteRepository.getFavoriteTravel(travel.id, user_id);
+            await this.favoriteRepository.getFavoriteTravel(
+              travel.id,
+              data.user_id,
+            );
 
           hasFavorited = !!checkFavorited?.status;
         }
@@ -76,4 +76,4 @@ class TravelFindUseCase {
   }
 }
 
-export { TravelFindUseCase };
+export { VacationPackageUseCase };

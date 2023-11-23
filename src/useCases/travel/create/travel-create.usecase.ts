@@ -20,9 +20,7 @@ class CreateTravelUseCase {
     data: ICreateTravelRequestDTO,
   ): Promise<ICreateTravelResponseDTO | null> {
     const currentDate = new Date();
-    const isInvalidDate = data?.availableDates?.find(
-      (dates) => currentDate > dates.endDate || currentDate < dates.startDate,
-    );
+    const isInvalidDate = data.dateRange.closeDate < currentDate;
 
     if (isInvalidDate) {
       Report.Error(
