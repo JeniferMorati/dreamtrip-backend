@@ -58,4 +58,6 @@ export interface ITravelDestination extends IEntity {
   gallery: string[];
   vacanciesPerPeriod: number;
   vacationPackageId?: Types.ObjectId;
+  capacityPeople: number;
+  additionalPerPerson: number;
 }

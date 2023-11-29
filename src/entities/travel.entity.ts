@@ -60,6 +60,16 @@ const TravelDestinationSchema = new Schema<ITravelDestination>(
       type: Schema.Types.ObjectId,
       ref: "Package",
     },
+    capacityPeople: {
+      type: Number,
+      required: [true, "Capacity of people is required"],
+      default: 1,
+    },
+    additionalPerPerson: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
   },
   {
     timestamps: true,
