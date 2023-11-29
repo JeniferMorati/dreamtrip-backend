@@ -5,6 +5,9 @@
   "author": "JeniferMorati",
   "private": true,
   "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "prebuild": "rm -rf ./dist",
     "build": "tsc -p tsconfig.build.json && cp -R ./register-path.js tsconfig.build.json package.json ./dist",
