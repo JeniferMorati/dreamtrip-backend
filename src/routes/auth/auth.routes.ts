@@ -5,9 +5,16 @@ import { TipRoute } from "routes/tip.routes";
 import { TravelRoute } from "routes/travel.routes";
 import { UpvoteRoute } from "routes/upvote.routes";
 import { UserRoute } from "routes/user.routes";
+import { VacationPackageRoute } from "routes/vacation-package.routes";
 
 const favoriteRoutes: { [key: string]: AuthRole[] } = {
   [FavoriteRoute.send]: [AuthRole.User],
+};
+
+const vacationPackageRoutes: { [key: string]: AuthRole[] } = {
+  [VacationPackageRoute.linked]: [AuthRole.Editor],
+  [VacationPackageRoute.unlinked]: [AuthRole.Editor],
+  [VacationPackageRoute.list]: [AuthRole.Guest],
 };
 
 const travelRoutes: { [key: string]: AuthRole[] } = {
@@ -15,6 +22,7 @@ const travelRoutes: { [key: string]: AuthRole[] } = {
   [TravelRoute.delete]: [AuthRole.Editor],
   [TravelRoute.update]: [AuthRole.Editor],
   [TravelRoute.find]: [AuthRole.Guest],
+  [TravelRoute.findOne]: [AuthRole.Guest],
   [TravelRoute.recommended]: [AuthRole.User],
 };
 
@@ -50,4 +58,5 @@ export const authenticatedRoutes: { [key: string]: AuthRole[] } = {
   ...upvoteRoutes,
   ...favoriteRoutes,
   ...reviewRoutes,
+  ...vacationPackageRoutes,
 };

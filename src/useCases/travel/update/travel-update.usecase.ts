@@ -39,7 +39,7 @@ class TravelUpdateUseCase {
     if (payload.included) travel.included = payload.included;
     if (payload.rating !== undefined) travel.rating = payload.rating;
     if (payload.price) travel.price = payload.price;
-    if (payload.availableDates) travel.availableDates = payload.availableDates;
+    if (payload.dateRange) travel.dateRange = payload.dateRange;
     if (payload.notes) travel.notes = payload.notes;
     if (payload.accommodation) travel.accommodation = payload.accommodation;
     if (payload.itinerary) travel.itinerary = payload.itinerary;

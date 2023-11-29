@@ -2,8 +2,10 @@ import { BaseController, StatusCode } from "@expressots/core";
 import {
   controller,
   httpGet,
+  queryParam,
   requestBody,
   requestHeaders,
+  requestParam,
   response,
 } from "inversify-express-utils";
 import { Response } from "express";
@@ -28,12 +30,18 @@ class TravelFindController extends BaseController {
   @httpGet("/", authMiddleware)
   async execute(
     @response() res: Response,
-    @requestBody() req: ITravelFindRequestDTO,
+    @queryParam("search") search: string,
+    @queryParam("startDate") startDate: Date,
+    @queryParam("endDate") endDate: Date,
+
     @requestHeaders("decoded") decoded,
   ): Promise<ITravelFindResponseDTO> {
+    console.log(TravelRoute.find);
     return this.callUseCaseAsync(
       this.travelFindUseCase.execute({
-        search: req.search,
+        search: search,
+        startDate: startDate,
+        endDate: endDate,
         user_id: decoded.id,
       }),
       res,

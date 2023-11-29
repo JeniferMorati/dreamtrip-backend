@@ -1,13 +1,12 @@
 import {
-  IAvailableDate,
+  IDateRange,
   IItinerary,
   ILocation,
   INote,
+  ITravelDestination,
   ITravelGenericCategory,
   ITravelGenericFeature,
-  ITravelReview,
 } from "@entities/interfaces/travel.entity.interface";
-import { ITravelDestination } from "@entities/travel.entity";
 
 interface ITravelUpdateRequestDTO {
   id: string;
@@ -19,9 +18,8 @@ interface ITravelUpdateRequestDTO {
   category?: ITravelGenericCategory[];
   included?: ITravelGenericCategory[];
   rating?: number;
-  reviews?: ITravelReview[];
   price: number;
-  availableDates?: IAvailableDate[];
+  dateRange?: IDateRange;
   notes: INote[];
   accommodation?: ITravelGenericFeature[];
   itinerary: IItinerary[];

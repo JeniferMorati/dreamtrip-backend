@@ -16,18 +16,14 @@ async function authMiddleware(
   const queryParamsKeys = Object.keys(req.query);
   let cleanedRoute = currentRoute;
   routerParamsKeys.forEach((paramKey) => {
-    cleanedRoute = cleanedRoute.replace(
-      `/${req.params[paramKey]}`,
-      `/:${paramKey}`,
-    );
+    cleanedRoute = cleanedRoute.replace(`/${req.params[paramKey]}`, "");
   });
 
   queryParamsKeys.forEach((queryKey) => {
-    cleanedRoute = cleanedRoute.replace(
-      `?${queryKey}=${req.query[queryKey]}`,
-      `?${queryKey}=:${queryKey}`,
-    );
+    const decodedValue = encodeURIComponent(req.query[queryKey] as string);
+    cleanedRoute = cleanedRoute.split("?")[0];
   });
+
   const token = req.headers["authorization"];
   const allowedRoles = authenticatedRoutes[cleanedRoute] || [];
   const isGuestRoute = allowedRoles[0] === AuthRole.Guest;

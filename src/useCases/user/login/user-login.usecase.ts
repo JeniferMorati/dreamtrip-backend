@@ -50,10 +50,16 @@ class UserLoginUseCase {
 
     const response: IUserLoginResponseDTO = {
       token,
-      name: findUser.nickName,
+      nickName: findUser.nickName,
       email: findUser.email,
       status: "success",
       id: findUser.id,
+      birthday: findUser.birthday,
+      firstName: findUser.firstName,
+      lastName: findUser.lastName,
+      image: findUser?.image || "",
+      imageVersion: findUser?.imageVersion || "",
+      interests: findUser?.interests || [],
     };
 
     return response;

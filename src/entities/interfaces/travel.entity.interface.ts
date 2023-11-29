@@ -1,4 +1,5 @@
 import { IEntity } from "@entities/base.entity";
+import { Types } from "mongoose";
 
 export interface ITravelGenericCategory {
   icon: string;
@@ -22,9 +23,9 @@ export interface ILocation {
   };
 }
 
-export interface IAvailableDate {
-  startDate: Date;
-  endDate: Date;
+export interface IDateRange {
+  openDate: Date;
+  closeDate: Date;
 }
 
 export interface INote {
@@ -50,9 +51,13 @@ export interface ITravelDestination extends IEntity {
   included?: ITravelGenericCategory[];
   rating?: number;
   price: number;
-  availableDates?: IAvailableDate[];
+  dateRange: IDateRange;
   notes: INote[];
   accommodation?: ITravelGenericFeature[];
   itinerary: IItinerary[];
   gallery: string[];
+  vacanciesPerPeriod: number;
+  vacationPackageId?: Types.ObjectId;
+  capacityPeople: number;
+  additionalPerPerson: number;
 }
